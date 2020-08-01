@@ -55,7 +55,7 @@ class SignUpFormBase extends Component {
         db.settings({
           timestampsInSnapshots: true
         });
-        const userRef = db.collection("Doctor_Details").doc(this.props.firebase.auth.currentUser.uid).set({
+        const userRef = db.collection("Doctor_Details").doc(this.props.firebase.auth.currentUser.email).set({
           fullname: this.state.username,
           email: this.state.email,
           degree: this.state.degree,

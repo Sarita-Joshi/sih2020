@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-
 import { Link, withRouter } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { SignInLink } from '../SignIn';
-
 import { withFirebase } from '../Firebase';
 import './index.css';
 import * as ROUTES from '../../constants/routes';

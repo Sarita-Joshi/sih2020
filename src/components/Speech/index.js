@@ -6,8 +6,16 @@ const recognition = new SpeechRecognition()
 
 recognition.continous = true
 recognition.interimResults = true
-recognition.lang = 'en-US'
+recognition.lang = 'en'
 
+var apiKey = "AIzaSyASmipGcBhywx0YkexKGjUVckN3fxOsKsk";
+var options = {
+  concurrentLimit: 20,
+  requestOptions: {
+    proxy: 'http://123.123.123.123:8080',   
+  },
+};
+var googleTranslate = require('google-translate')(apiKey, options);
 
 class Speech extends Component {
 
@@ -28,7 +36,6 @@ class Speech extends Component {
   }
   
   callAPI(){
-
 
     fetch('http://localhost:9000/name?data='+ document.getElementById('finaltext').value)
     .then(res => res.json())
@@ -56,7 +63,7 @@ class Speech extends Component {
         this.dia_text += res.Diagnosis[this.i]+"\n";
       }
      
-
+      //
       this.props.history.push({
         pathname: ROUTES.PRESCRIPTION,
 
@@ -103,9 +110,22 @@ class Speech extends Component {
       }
 
       document.getElementById('finaltext').value = finalTranscript;
-       }
 
-  
+      // googleTranslate.detectLanguage(finalTranscript, function(err, detection){
+      //   console.log(detection);
+      //   // =>  { language: "en", isReliable: false, confidence: 0.5714286, originalText: "Hello" }
+      // });
+
+      // googleTranslate.translate(finalTranscript, 'en', function(err, translation) {
+      //   console.log(translation.translatedText);
+      //   // =>  Mi nombre es Brandon
+      // });
+      googleTranslate.translate(finalTranscript, 'en', function(err, translation) {
+        console.log(translation);
+        // =>  { translatedText: 'Hallo', originalText: 'Hello', detectedSourceLanguage: 'en' }
+      });
+      
+    } 
 
 }
 

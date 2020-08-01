@@ -2,6 +2,7 @@ export const LANDING = '/';
 export const SIGN_UP = '/signup';
 export const SIGN_IN = '/signin';
 export const HOME = '/home';
+export const MAIN = '/main';
 export const SPEECH = '/speech';
 export const PRESCRIPTION = '/pdf';
 export const SCHEDULING = '/scheduling';

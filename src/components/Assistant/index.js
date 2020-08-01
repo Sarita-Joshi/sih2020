@@ -15,8 +15,6 @@ const SchedulePage = () => (
   
 );
 
-
-
 const INITIAL_STATE = {
   name: '',
   rid: '',  
@@ -34,7 +32,7 @@ class AppointmentFormBase extends Component {
   
   componentDidMount() {
     this.setState({ loading: true });
-    firebase.database().ref('patients').on('value', snapshot => {
+    firebase.firestore().ref('Patient_Details').on('value', snapshot => {
         const usersObject = snapshot.val();
 		const usersList = Object.keys(usersObject).map(key => ({
         ...usersObject[key],
@@ -48,16 +46,18 @@ class AppointmentFormBase extends Component {
   }
   
   componentWillUnmount() {
-    firebase.database().ref('patients').off();
+    firebase.firestore().ref('Patient_Details').off();
   }
   
   onSubmit = event => {
     const a1 = { 
-      name:this.state.name, 
-      rid:this.state.rid,
+      name:this.state.name,
+      email:this.state.email,
+      gender:this.state.gender,
+      age:this.state.age,      
     };
     
-      var ref = firebase.database().ref('/patients/');
+      var ref = firebase.database().ref('/Patient_Details/');
       var newRef = ref.push();
         newRef.set(a1);
     console.log('DATA SAVED');

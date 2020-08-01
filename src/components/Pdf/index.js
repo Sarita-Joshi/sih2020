@@ -16,8 +16,6 @@ const pdf = () => (
 
 );
 
-
-
 const INITIAL_STATE = {
   hospital: '',
   doctorname: '',
@@ -55,8 +53,8 @@ class pdfBase extends Component {
       db.settings({
         timestampsInSnapshots: true
       });
-      db.collection("Doctors")
-      .doc(user.uid)
+      db.collection("Doctor_Details")
+      .doc(user.email)
       .get()
       .then(doc => {
         const data = doc.data();
@@ -70,10 +68,6 @@ class pdfBase extends Component {
       console.log("Got an error: ",error);
       });
     } 
-
-//get data form firestore
-
-  //edit prescription and dose
 
   
 });
@@ -92,23 +86,20 @@ class pdfBase extends Component {
 
   onSubmit = event => {
     event.preventDefault();
-        //hide textarea
-    
+        //hide textarea    
     
     document.getElementById("sugg_txt").style.display = "none";
     document.getElementById("adv_txt").style.display = "none";
     document.getElementById("pre_txt").style.display = "none";
     document.getElementById("dia_txt").style.display = "none";
     document.getElementById("sym_txt").style.display = "none";
+    document.getElementById("label_sugg").style.display = "none";
     document.getElementById("btn").style.display = "none";
     //set text
-    document.getElementById('p_sugg').innerHTML = document.getElementById('sugg_txt').value;
     document.getElementById('p_advice').innerHTML = document.getElementById('adv_txt').value;
     document.getElementById('p_pre').innerHTML = document.getElementById('pre_txt').value;
     document.getElementById('p_dia').innerHTML = document.getElementById('dia_txt').value;
     document.getElementById('p_sym').innerHTML = document.getElementById('sym_txt').value;
-
-
 
 
     const input = document.getElementById('pdfform');
@@ -127,19 +118,32 @@ class pdfBase extends Component {
         pdf.save(this.props.location.state.PatientName +"_prescription.pdf");
       })
     ;
-    document.getElementById('p_sugg').innerHTML = "";
     document.getElementById('p_advice').innerHTML = "";
     document.getElementById('p_pre').innerHTML = "";
     document.getElementById('p_dia').innerHTML = "";
     document.getElementById('p_sym').innerHTML = "";
 
     document.getElementById("btn").style.display = "block";
+    document.getElementById("label_sugg").style.display = "block";
     document.getElementById("sugg_txt").style.display = "block";
     document.getElementById("adv_txt").style.display = "block";
     document.getElementById("pre_txt").style.display = "block";
     document.getElementById("dia_txt").style.display = "block";
     document.getElementById("sym_txt").style.display ="block";
     
+      //update patient history
+    const db = this.props.firebase.db;
+        db.settings({
+          timestampsInSnapshots: true
+        });
+        const userRef = db.collection("Patient_Details").doc(this.props.firebase.auth.currentUser.uid)
+          .collection("History").doc().set({
+          suggestions:  document.getElementById('sugg_text').value,
+          diagnosis: document.getElementById('p_dia').innerHTML,
+          symptoms: document.getElementById('p_sym').innerHTML,
+          advice: document.getElementById('p_advice').innerHTML,
+          prescription: document.getElementById('p_pre').innerHTML,          
+        });  
 
   }
   
@@ -250,7 +254,7 @@ class pdfBase extends Component {
         /></div>
         <p id="p_pre" ></p>
         <div className="form-group ">
-                    <label>suggestions</label>
+                    <label id='label_sugg'>suggestions</label>
         <textarea
           name="suggestions" className="form-control"
           value={suggestions} id="sugg_txt"
@@ -259,7 +263,6 @@ class pdfBase extends Component {
           rows="4"
           placeholder="suggestions"></textarea>         
         </div>
-        <p id="p_sugg" ></p>
         <div className="form-group ">
                     <label>Other advices</label>
         <textarea
